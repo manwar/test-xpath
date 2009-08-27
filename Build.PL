@@ -13,7 +13,8 @@ Module::Build->new(
         'Test::More'    => '0.17',
     },
     requires           => {
-        'XML::LibXML' => '1.69',
+        'Test::Builder' => '0.17',
+        'XML::LibXML'   => '1.69',
     },
     recommends         => {
         'Test::Pod'           => '1.20',
