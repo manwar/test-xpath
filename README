@@ -1,0 +1,34 @@
+Test/XPath version 0.01
+=======================
+
+
+
+INSTALLATION
+
+To install this module, type the following:
+
+    perl Build.PL
+    ./Build
+    ./Build test
+    ./Build install
+
+Or, if you don't have Module::Build installed, type the following:
+
+    perl Makefile.PL
+    make
+    make test
+    make install
+
+Dependencies
+------------
+
+Template::Declare::Bricolage has one none-core dependency: `XML::LibXML` -
+Perl Binding for libxml2.
+
+Copyright and Licence
+---------------------
+
+Copyright (c) 2009 David E. Wheeler. Some Rights Reserved.
+
+This module is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.

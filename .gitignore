@@ -1,0 +1,6 @@
+_build
+blib
+Test-XPath-*
+MANIFEST*
+META.*
+Build
