@@ -8,38 +8,102 @@ our $VERSION = '0.01';
 
 sub new {
     my ($class, %p) = @_;
-
-    # Create and configure the parser.
-    my $parser = XML::LibXML->new;
-    while (my ($k, $v) = each %p) {
-        next if $k eq 'html' or $k eq 'xml' or $k eq 'opts';
-        $parser->$k($v);
-    }
-
-    # Parse the document.
-    my $doc = $p{html}
-        ? $parser->parse_html_string($p{html}, $p{opts})
-        : $parser->parse_string($p{xml});
-
-    return bless \$doc;
+    my $doc = delete $p{doc} || _doc(\%p);
+    my $xpc = XML::LibXML::XPathContext->new( $doc->documentElement );
+    $xpc->registerNs( %{ $p{xmlns} }) if $p{xmlns};
+    return bless {
+        xpc  => $xpc,
+        node => $doc->documentElement,
+    };
 }
 
 sub xpath_ok {
-    my $doc  = $ { +shift };
-    my $desc = shift;
-    my $code;
-    if (ref $desc eq 'CODE') {
-        $code = $desc;
-        $desc = shift;
+    my ($self, $xpath, $code, $desc) = @_;
+    my $xpc  = $self->{xpc};
+    my $Test = Test::Builder->new;
+
+    if (ref $code eq 'CODE') {
+        # Gonna do some recursive testing.
+        my @nodes = $xpc->findnodes($xpath, $self->{node})
+            or return $Test->ok(0, $desc);
+
+        # Record the current test result.
+        my $ret  = $Test->ok(1, $desc);
+
+        # Call the code ref on each found node.
+        local $_ = $self;
+        for my $node (@nodes) {
+            local $self->{node} = $node;
+            $code->($self);
+        }
+        return $ret;
     } else {
-        $code = sub { };
+        # We're just testing for existence ($code is description).
+        $Test->ok( $xpc->exists($xpath, $self->{node}), $code);
     }
 
-    my $Test = Test::Builder->new;
 }
 
 sub xpath_is {
+    my ($self, $xpath, $want, $desc) = @_;
+    Test::Builder::new->is_eq( _findv($self, $xpath), $want, $desc);
+}
 
+sub xpath_isnt {
+    my ($self, $xpath, $want, $desc) = @_;
+    Test::Builder::new->isnt_eq( _findv($self, $xpath), $want, $desc);
+}
+
+sub xpath_like {
+    my ($self, $xpath, $want, $desc) = @_;
+    Test::Builder::new->like( _findv($self, $xpath), $want, $desc);
+}
+
+sub xpath_unlike {
+    my ($self, $xpath, $want, $desc) = @_;
+    Test::Builder::new->unlike( _findv($self, $xpath), $want, $desc);
+}
+
+sub xpath_cmp_ok {
+    my ($self, $xpath, $op, $want, $desc) = @_;
+    Test::Builder::new->cmp_ok( _findv($self, $xpath), $op, $want, $desc);
+}
+
+sub _findv {
+    my $self = shift;
+    $self->{xpc}->findvalue(shift, $self->{node});
+}
+
+sub _doc {
+    my $p = shift;
+
+    # Create and configure the parser.
+    my $parser = XML::LibXML->new;
+
+    # Apply any parser options.
+    if (my $opts = $p->{options}) {
+        while (my ($k, $v) = each %{ $opts }) {
+            $parser->$k($v);
+        }
+    }
+
+    # Parse and return the document.
+    if ($p->{xml}) {
+        return $p->{is_html}
+            ? $parser->parse_html_string($p->{xml})
+            : $parser->parse_string($p->{xml});
+    }
+
+    if ($p->{file}) {
+        return $p->{is_html}
+            ? $parser->parse_html_file($p->{xml})
+            : $parser->parse_file($p->{xml});
+    }
+
+    require Carp;
+    Carp::carp(
+        'Test::XPath->new requires the "xml", "file", or "doc" parameter'
+    );
 }
 
 1;
@@ -65,11 +129,6 @@ Test::XPath - Test XML and HTML using XML::LibXML XPath expressions
   use Test::More plan => 1;
   use Test::XPath;
 
-  # Simple tests.
-  xpath_ok $xml, $xpath, $description;
-  xpath_is $xml, $xpath, $want, $description;
-
-  # When testing a document multilple times:
   my $tx = Test::XPath->new(
       html => $html,
       no_network => 1,
@@ -79,44 +138,85 @@ Test::XPath - Test XML and HTML using XML::LibXML XPath expressions
   $tx->xpath_is( $xpath, $want, $description );
 
   # Recursing into a document:
-  $tx->xpath_ok( $xpath, $description, sub {
+  $tx->xpath_ok( $xpath, sub {
       for my $elem (@_) {
-          $tx->xpath_is($xpath, $want, $description);
+          $elem->xpath_is($xpath, $want, $description);
       }
-  });
+  }, $description);
 
 =head1 Description
 
 Use the power of the XPath syntax supported by XML::LibXML to validate the
 structure of your XML and HTML documents.
 
-=head2 Functional Interface
-
-
-
-=head3 xpath_ok
-
-
-
-=head3 xpath_is
-
-
-
-=head2 Object-Oriented Interface
-
-
+=head2 Interface
 
 =head3 new
 
+  my $xp = Test::XPath->new( xml => $xml );
 
+Creates and returns an XML::XPath object. This object can be used to run XPath
+tests on the XML passed to it. The supported parameters are:
 
-=head3 xpath_ok
+=over
 
+=item xml
 
+  xml => '<foo><bar>hey</bar></foo>',
+
+The XML to be parsed and tested. Required unless the C<file> or C<doc> option
+is passed.
+
+=item file
+
+  file => 'rss.xml',
+
+Name of the file containing the XML to be parsed and tested. Required unless
+the C<xml> or C<doc> option is passed.
+
+=item doc
+
+  doc => XML::LibXML->new->parse_file($xml_file),
+
+An XML::LibXML document object. Required unless the C<xml> or C<file> option
+is passed.
+
+=item is_html
+
+  is_html => 1,
+
+If the XML you're testing is actually HTML, pass this option a true value and
+XML::LibXML's HTML parser will be used instead of the XML parser.
+
+=item xmlns
+
+  xmlns => { x => 'http://www.w3.org/1999/xhtml' },
+
+Default XML namespace to be used in the XPath queries.
+
+=item options
+
+  options => { recover_silently => 1, no_network => 1 },
+
+Optional hash reference of
+L<XML::LibXML::Parser options|XML::LibXML::Parser/"PARSER OPTIONS">, such as
+"validation", "recover", and "no_network".
+
+=back
 
 =head3 xpath_is
 
+  $xp->xpath_is()
 
+=head3 xpath_ok
+
+  $xp->xpath_ok( '//foo/bar', 'Should have bar element under foo element' );
+  $xp->xpath_ok( '//assets/story', sub {
+      my $i;
+      for my $story (@_) {
+          $story->xpath_is('[@id]/text()', ++$i, "ID should be $i in story" );
+      }
+  }, 'Should have story elements' );
 
 =head1 Support
 
