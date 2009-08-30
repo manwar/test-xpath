@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 use strict;
-use Test::Builder::Tester tests => 13;
+use Test::Builder::Tester tests => 15;
 use Test::More;
 
 BEGIN { use_ok 'Test::XPath' or die; }
@@ -52,3 +52,11 @@ $xp->xpath_is('/html/body/p/@class', 'foo', 'Should get attribute value');
 
 # Try a function.
 $xp->xpath_is('count(/html/body/p)', 2, 'Should work for functions');
+
+# Try a boolean function.
+$xp->xpath_ok('boolean(1)', 'Boolean should work');
+
+# Try a false boolean.
+test_out('not ok 1 - false boolean');
+$xp->xpath_ok('false()', 'false boolean');
+test_test( skip_err => 1 );
