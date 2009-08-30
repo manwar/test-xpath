@@ -128,31 +128,52 @@ Test::XPath - Test XML and HTML content and structure with XPath expressions
 
 =head1 Synopsis
 
-  use Test::More plan => 1;
+  use Test::More tests => 5;
   use Test::XPath;
 
-  my $tx = Test::XPath->new(
-      html       => $html,
-      no_network => 1,
-  );
+  my $xml = <<'XML';
+  <html>
+    <head>
+      <title>Hello</title>
+      <style type="text/css" src="foo.css"></style>
+      <style type="text/css" src="bar.css"></style>
+    </head>
+    <body>
+      <h1>Welcome to my lair.</h1>
+    </body>
+  </html>
+  XML
 
-  $tx->ok( $xpath, $description );
-  $tx->is( $xpath, $want, $description );
+  my $tx = Test::XPath->new( xml => $xml );
+
+  $tx->ok( '/html/head', 'There should be a head' );
+  $tx->is( '/html/head/title', 'Hello', 'The title should be correct' );
 
   # Recursing into a document:
   my @css = qw(foo.css bar.css);
-  $tx->ok( '/html/head/style', sub {
-      shift->is( './@src', shift @css);
-  }, $description);
+  $tx->ok( '/html/head/style[@type="text/css"]', sub {
+      my $css = shift @css;
+      shift->is( './@src', $css, "Style src should be $css");
+  }, 'Should have style');
 
 =head1 Description
 
 Use the power of XPath expressions to validate the structure of your XML and
 HTML documents.
 
-=head2 Interface
+=head2 Introduction to XPath
 
-=head3 new
+XPath is a powerful query lanugage for XML documents.
+
+=head2 Testing HTML Documents
+
+
+
+=head1 Class Interface
+
+=head2 Constructor
+
+=head3 C<new>
 
   my $xp = Test::XPath->new( xml => $xml );
 
@@ -161,38 +182,39 @@ tests on the XML passed to it. The supported parameters are:
 
 =over
 
-=item xml
+=item C<xml>
 
   xml => '<foo><bar>hey</bar></foo>',
 
 The XML to be parsed and tested. Required unless the C<file> or C<doc> option
 is passed.
 
-=item file
+=item C<file>
 
   file => 'rss.xml',
 
 Name of a file containing the XML to be parsed and tested. Required unless the
 C<xml> or C<doc> option is passed.
 
-=item doc
+=item C<doc>
 
   doc => XML::LibXML->new->parse_file($xml_file),
 
 An XML::LibXML document object. Required unless the C<xml> or C<file> option
 is passed.
 
-=item is_html
+=item C<is_html>
 
   is_html => 1,
 
 If the XML you're testing is actually HTML, pass this option a true value and
 XML::LibXML's HTML parser will be used instead of the XML parser. This is
-especially useful if your HTML has a DOCTYPE declaration and an XML namespace
-and you don't want the parser grabbing the DTD from its URL and you don't want
-to mess with a namespace prefix.
+especially useful if your HTML has a DOCTYPE declaration or an XML namespace
+(xmlns attribute) and you don't want the parser grabbing the DTD over the
+Internet and you don't want to mess with a namespace prefix in your XPath
+expressions.
 
-=item xmlns
+=item C<xmlns>
 
   xmlns => {
       x => 'http://www.w3.org/1999/xhtml',
@@ -202,7 +224,7 @@ to mess with a namespace prefix.
 Set up prefixes for XML namespaces. Required if your XML uses namespaces and
 you want to write reasonable XPath expressions.
 
-=item options
+=item C<options>
 
   options => { recover_silently => 1, no_network => 1 },
 
@@ -212,7 +234,22 @@ L<XML::LibXML::Parser options|XML::LibXML::Parser/"PARSER OPTIONS">, such as
 
 =back
 
-=head3 ok
+=head1 Instance Interface
+
+=head2 Accessors
+
+=head3 C<node>
+
+Returns the current context node.
+
+=head3 C<xpc>
+
+Returns the L<XML::LibXML::XPathContext|XML::LibXML::XPathContext> used to
+execute the XPath expressions.
+
+=head2 Assertions
+
+=head3 C<ok>
 
   $xp->ok( '//foo/bar', 'Should have bar element under foo element' );
   $xp->ok('/contains(//title, "Welcome")', 'Title should contain "Welcome"');
@@ -228,23 +265,23 @@ If it finds a value, the value must be a true value (in the Perl sense).
       }
   }, 'Should have story elements' );
 
-=head3 is
+=head3 C<is>
 
   $xp->is('/html/head/title', 'Welcome');
 
-=head3 isnt
+=head3 C<isnt>
 
-  $xp->isnt('/html/head/link[@type]', 'hello');
+  $xp->isnt('/html/head/link/@type', 'hello');
 
-=head3 like
+=head3 C<like>
 
   $xp->like('/html/head/title', qr/^Foobar Inc.: .+/);
 
-=head3 unlike
+=head3 C<unlike>
 
   $xp->unlike()
 
-=head3 cmp_ok
+=head3 C<cmp_ok>
 
   $xp->cmp_ok()
 
