@@ -209,6 +209,22 @@ L<XML::LibXML::Parser options|XML::LibXML::Parser/"PARSER OPTIONS">, such as
 
 =back
 
+=head3 ok
+
+  $xp->ok( '//foo/bar', 'Should have bar element under foo element' );
+  $xp->ok('/contains(//title, "Welcome")', 'Title should contain "Welcome"');
+
+Test that an XPath expression evaluated against the XML document returns a
+true value. If the XPath expression finds no nodes, the result will be false.
+If it finds a value, the value must be a true value (in the Perl sense).
+
+  $xp->ok('//assets/story', sub {
+      my $i;
+      for my $story (@_) {
+          $story->is('[@id]/text()', ++$i, "ID should be $i in story" );
+      }
+  }, 'Should have story elements' );
+
 =head3 is
 
   $xp->is('/html/head/title', 'Welcome');
@@ -228,16 +244,6 @@ L<XML::LibXML::Parser options|XML::LibXML::Parser/"PARSER OPTIONS">, such as
 =head3 cmp_ok
 
   $xp->cmp_ok()
-
-=head3 ok
-
-  $xp->ok( '//foo/bar', 'Should have bar element under foo element' );
-  $xp->ok( '//assets/story', sub {
-      my $i;
-      for my $story (@_) {
-          $story->is('[@id]/text()', ++$i, "ID should be $i in story" );
-      }
-  }, 'Should have story elements' );
 
 =head1 Support
 

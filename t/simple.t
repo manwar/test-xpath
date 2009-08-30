@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 use strict;
-use Test::Builder::Tester tests => 15;
+use Test::Builder::Tester tests => 21;
 use Test::More;
 
 BEGIN { use_ok 'Test::XPath' or die; }
@@ -44,19 +44,59 @@ $xp->like( '/html/head/title', qr{^Hel{2}o$}, 'like should work');
 $xp->unlike( '/html/head/title', qr{^Bye$}, 'unlike should work');
 $xp->cmp_ok('/html/head/title', 'eq', 'Hello', 'cmp_ok should work');
 
+# Make them fail.
+test_out('not ok 1 - is should work');
+test_out('not ok 2 - isnt should work');
+test_out('not ok 3 - like should work');
+test_out('not ok 4 - unlike should work');
+test_out('not ok 5 - cmp_ok should work');
+$xp->is( '/html/head/title', 'Bye', 'is should work');
+$xp->isnt( '/html/head/title', 'Hello', 'isnt should work');
+$xp->like( '/html/head/title', qr{^Bye$}, 'like should work');
+$xp->unlike( '/html/head/title', qr{^Hel{2}o$}, 'unlike should work');
+$xp->cmp_ok('/html/head/title', 'ne', 'Hello', 'cmp_ok should work');
+test_test(
+    skip_err => 1,
+    title => 'Failures in the simple methods should work',
+);
+
 # Try multiples.
 $xp->is('/html/body/p', 'firstpost', 'Should work for multiples');
 
 # Try an attribute.
 $xp->is('/html/body/p/@class', 'foo', 'Should get attribute value');
+$xp->ok('/html/body/p[@class="foo"]', 'Should find by attribute value');
 
 # Try a function.
 $xp->is('count(/html/body/p)', 2, 'Should work for functions');
 
-# Try a boolean function.
-$xp->ok('boolean(1)', 'Boolean should work');
+# Try boolean function.
+$xp->ok('boolean(1)', 'boolean(1) should be true');
+$xp->ok('true()', 'true() should be true');
 
 # Try a false boolean.
 test_out('not ok 1 - false boolean');
 $xp->ok('false()', 'false boolean');
-test_test( skip_err => 1 );
+test_test(
+    skip_err => 1,
+    title => 'Boolean true returned by XPath should be true in ok()',
+);
+
+# Try a comparison function.
+$xp->ok('contains(//title, "Hell")', 'Title should contain "hell"');
+
+# Try a false comparison.
+test_out('not ok 1 - heck');
+$xp->ok('contains(//title, "Heck")', 'heck');
+test_test(
+    skip_err => 1,
+    title => 'Boolean false returned by XPath should be false in ok()',
+);
+
+# Try a non-existent node.
+test_out('not ok 1');
+$xp->ok('/foo/baz');
+test_test(
+    skip_err => 1,
+    title => 'Nonexistent node should be false in ok()',
+);
