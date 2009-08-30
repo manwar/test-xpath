@@ -187,7 +187,10 @@ is passed.
   is_html => 1,
 
 If the XML you're testing is actually HTML, pass this option a true value and
-XML::LibXML's HTML parser will be used instead of the XML parser.
+XML::LibXML's HTML parser will be used instead of the XML parser. This is
+especially useful if your HTML has a DOCTYPE declaration and an XML namespace
+and you don't want the parser grabbing the DTD from its URL and you don't want
+to mess with a namespace prefix.
 
 =item xmlns
 
