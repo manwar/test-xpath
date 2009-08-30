@@ -163,7 +163,7 @@ HTML documents.
 
 =head2 Introduction to XPath
 
-XPath is a powerful query lanugage for XML documents.
+XPath is a powerful query language for XML documents.
 
 =head2 Testing HTML Documents
 

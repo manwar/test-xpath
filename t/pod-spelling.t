@@ -13,3 +13,6 @@ XPath
 xmlns
 xml
 namespace
+namespaces
+DOCTYPE
+DTD
