@@ -4,7 +4,6 @@ use strict;
 use Test::Builder::Tester tests => 7;
 use Test::More;
 use File::Spec::Functions 'catfile';
-use utf8;
 
 BEGIN { use_ok 'Test::XPath' or die; }
 
@@ -31,7 +30,7 @@ $xp->ok('/x:html/x:head/x:title', 'yay');
 test_test  title => 'Should succeed with namespace prefix';
 
 # Now use the HTML parser.
-ok my $xp = Test::XPath->new(
+ok $xp = Test::XPath->new(
     file => $file,
     is_html => 1,
 ), 'Create object that uses the HTML parser';
