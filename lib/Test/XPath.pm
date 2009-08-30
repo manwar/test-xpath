@@ -10,14 +10,18 @@ sub new {
     my ($class, %p) = @_;
     my $doc = delete $p{doc} || _doc(\%p);
     my $xpc = XML::LibXML::XPathContext->new( $doc->documentElement );
-    $xpc->registerNs( %{ $p{xmlns} }) if $p{xmlns};
+    if (my $ns = $p{xmlns}) {
+        while (my ($k, $v) = each %{ $ns }) {
+            $xpc->registerNs( $k => $v );
+        }
+    }
     return bless {
         xpc  => $xpc,
         node => $doc->documentElement,
     };
 }
 
-sub xpath_ok {
+sub ok {
     my ($self, $xpath, $code, $desc) = @_;
     my $xpc  = $self->{xpc};
     my $Test = Test::Builder->new;
@@ -47,23 +51,23 @@ sub xpath_ok {
 sub node { shift->{node} }
 sub xpc  { shift->{xpc}  }
 
-sub xpath_is {
+sub is {
     Test::Builder::new->is_eq( _findv(shift, shift), @_);
 }
 
-sub xpath_isnt {
+sub isnt {
     Test::Builder::new->isnt_eq( _findv(shift, shift), @_);
 }
 
-sub xpath_like {
+sub like {
     Test::Builder::new->like( _findv(shift, shift), @_);
 }
 
-sub xpath_unlike {
+sub unlike {
     Test::Builder::new->unlike( _findv(shift, shift), @_);
 }
 
-sub xpath_cmp_ok {
+sub cmp_ok {
     Test::Builder::new->cmp_ok( _findv(shift, shift), @_);
 }
 
@@ -132,19 +136,19 @@ Test::XPath - Test XML and HTML content and structure with XPath expressions
       no_network => 1,
   );
 
-  $tx->xpath_ok( $xpath, $description );
-  $tx->xpath_is( $xpath, $want, $description );
+  $tx->ok( $xpath, $description );
+  $tx->is( $xpath, $want, $description );
 
   # Recursing into a document:
   my @css = qw(foo.css bar.css);
-  $tx->xpath_ok( '/html/head/style', sub {
-      shift->xpath_is( './@src', shift @css);
+  $tx->ok( '/html/head/style', sub {
+      shift->is( './@src', shift @css);
   }, $description);
 
 =head1 Description
 
-Use the power of the XPath syntax supported by XML::LibXML to validate the
-structure of your XML and HTML documents.
+Use the power of XPath expressions to validate the structure of your XML and
+HTML documents.
 
 =head2 Interface
 
@@ -168,8 +172,8 @@ is passed.
 
   file => 'rss.xml',
 
-Name of the file containing the XML to be parsed and tested. Required unless
-the C<xml> or C<doc> option is passed.
+Name of a file containing the XML to be parsed and tested. Required unless the
+C<xml> or C<doc> option is passed.
 
 =item doc
 
@@ -187,9 +191,13 @@ XML::LibXML's HTML parser will be used instead of the XML parser.
 
 =item xmlns
 
-  xmlns => { x => 'http://www.w3.org/1999/xhtml' },
+  xmlns => {
+      x => 'http://www.w3.org/1999/xhtml',
+      a => 'http://www.w3.org/2007/app',
+  },
 
-Default XML namespace to be used in the XPath queries.
+Set up prefixes for XML namespaces. Required if your XML uses namespaces and
+you want to write reasonable XPath expressions.
 
 =item options
 
@@ -201,33 +209,33 @@ L<XML::LibXML::Parser options|XML::LibXML::Parser/"PARSER OPTIONS">, such as
 
 =back
 
-=head3 xpath_is
+=head3 is
 
-  $xp->xpath_is('/html/head/title', 'Welcome');
+  $xp->is('/html/head/title', 'Welcome');
 
-=head3 xpath_isnt
+=head3 isnt
 
-  $xp->xpath_isnt('/html/head/link[@type]', 'hello');
+  $xp->isnt('/html/head/link[@type]', 'hello');
 
-=head3 xpath_like
+=head3 like
 
-  $xp->xpath_like('/html/head/title', qr/^Foobar Inc.: .+/);
+  $xp->like('/html/head/title', qr/^Foobar Inc.: .+/);
 
-=head3 xpath_unlike
+=head3 unlike
 
-  $xp->xpath_unlike()
+  $xp->unlike()
 
-=head3 xpath_cmp_ok
+=head3 cmp_ok
 
-  $xp->xpath_cmp_ok()
+  $xp->cmp_ok()
 
-=head3 xpath_ok
+=head3 ok
 
-  $xp->xpath_ok( '//foo/bar', 'Should have bar element under foo element' );
-  $xp->xpath_ok( '//assets/story', sub {
+  $xp->ok( '//foo/bar', 'Should have bar element under foo element' );
+  $xp->ok( '//assets/story', sub {
       my $i;
       for my $story (@_) {
-          $story->xpath_is('[@id]/text()', ++$i, "ID should be $i in story" );
+          $story->is('[@id]/text()', ++$i, "ID should be $i in story" );
       }
   }, 'Should have story elements' );
 

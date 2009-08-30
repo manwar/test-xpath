@@ -33,51 +33,51 @@ isa_ok $xp, 'Test::XPath';
 isa_ok $xp->{xpc}, 'XML::LibXML::XPathContext';
 
 # Do some tests with it.
-$xp->xpath_ok('/html/head/title', 'Should find the title');
+$xp->ok('/html/head/title', 'Should find the title');
 
 # Try a recursive call.
-$xp->xpath_ok( '/html/body/p', sub {
-    shift->xpath_ok('./em', sub {
-        $_->xpath_ok('./b', 'Find b under em');
+$xp->ok( '/html/body/p', sub {
+    shift->ok('./em', sub {
+        $_->ok('./b', 'Find b under em');
     }, 'Find em under para');
 }, 'Find paragraphs');
 
 # Try is, like, and cmp_ok.
-$xp->xpath_is( '/html/head/title', 'Hello', 'xpath_is should work');
-$xp->xpath_isnt( '/html/head/title', 'Bye', 'xpath_isnt should work');
-$xp->xpath_like( '/html/head/title', qr{^Hel{2}o$}, 'xpath_like should work');
-$xp->xpath_unlike( '/html/head/title', qr{^Bye$}, 'xpath_unlike should work');
-$xp->xpath_cmp_ok('/html/head/title', 'eq', 'Hello', 'xpath_cmp_ok should work');
+$xp->is( '/html/head/title', 'Hello', 'is should work');
+$xp->isnt( '/html/head/title', 'Bye', 'isnt should work');
+$xp->like( '/html/head/title', qr{^Hel{2}o$}, 'like should work');
+$xp->unlike( '/html/head/title', qr{^Bye$}, 'unlike should work');
+$xp->cmp_ok('/html/head/title', 'eq', 'Hello', 'cmp_ok should work');
 
 # Try multiples.
-$xp->xpath_is('/html/body/p', 'firstpost', 'Two values should concatenate');
+$xp->is('/html/body/p', 'firstpost', 'Two values should concatenate');
 
 # Try loading a file.
 my $file = catfile qw(t menu.xml);
 ok $xp = Test::XPath->new( file => $file ), 'Should create with file';
 
 # Do some tests on the XML.
-$xp->xpath_is('/menu/restaurant', 'Trébol', 'Should find Unicode value in file');
+$xp->is('/menu/restaurant', 'Trébol', 'Should find Unicode value in file');
 
-# Use recursive xpath_ok() to ensure all items have the appropriate parts.
+# Use recursive ok() to ensure all items have the appropriate parts.
 my $i = 0;
-$xp->xpath_ok('/menu/item', sub {
+$xp->ok('/menu/item', sub {
     ++$i;
-    $_->xpath_ok('./name', "Item $i should have a name");
-    $_->xpath_ok('./price', "Item $i should have a price");
-    $_->xpath_ok('./description', "Item $i should have a description");
+    $_->ok('./name', "Item $i should have a name");
+    $_->ok('./price', "Item $i should have a price");
+    $_->ok('./description', "Item $i should have a description");
 }, 'Should have items' );
 
 # Hey, so no try using the doc param.
 ok $xp = Test::XPath->new(
     doc => XML::LibXML->new->parse_file($file),
 ), 'Should create with doc';
-$xp->xpath_is('/menu/restaurant', 'Trébol', 'Should find Unicode value in doc');
+$xp->is('/menu/restaurant', 'Trébol', 'Should find Unicode value in doc');
 
 # Use a namespace.
 ok $xp = Test::XPath->new(
     xml   => $xml,
     xmlns => { 'ex' => 'http://w3.org/ex' },
 ), 'Should create with real namespace';
-$xp->xpath_ok('/ex:foo/ex:bar', 'We should find an ex:bar');
-$xp->xpath_is('/ex:foo/ex:bar[1]', 'first', 'Should be able to check the first ex:bar value');
+$xp->ok('/ex:foo/ex:bar', 'We should find an ex:bar');
+$xp->is('/ex:foo/ex:bar[1]', 'first', 'Should be able to check the first ex:bar value');
