@@ -44,29 +44,27 @@ sub xpath_ok {
 
 }
 
+sub node { shift->{node} }
+sub xpc  { shift->{xpc}  }
+
 sub xpath_is {
-    my ($self, $xpath, $want, $desc) = @_;
-    Test::Builder::new->is_eq( _findv($self, $xpath), $want, $desc);
+    Test::Builder::new->is_eq( _findv(shift, shift), @_);
 }
 
 sub xpath_isnt {
-    my ($self, $xpath, $want, $desc) = @_;
-    Test::Builder::new->isnt_eq( _findv($self, $xpath), $want, $desc);
+    Test::Builder::new->isnt_eq( _findv(shift, shift), @_);
 }
 
 sub xpath_like {
-    my ($self, $xpath, $want, $desc) = @_;
-    Test::Builder::new->like( _findv($self, $xpath), $want, $desc);
+    Test::Builder::new->like( _findv(shift, shift), @_);
 }
 
 sub xpath_unlike {
-    my ($self, $xpath, $want, $desc) = @_;
-    Test::Builder::new->unlike( _findv($self, $xpath), $want, $desc);
+    Test::Builder::new->unlike( _findv(shift, shift), @_);
 }
 
 sub xpath_cmp_ok {
-    my ($self, $xpath, $op, $want, $desc) = @_;
-    Test::Builder::new->cmp_ok( _findv($self, $xpath), $op, $want, $desc);
+    Test::Builder::new->cmp_ok( _findv(shift, shift), @_);
 }
 
 sub _findv {
@@ -96,8 +94,8 @@ sub _doc {
 
     if ($p->{file}) {
         return $p->{is_html}
-            ? $parser->parse_html_file($p->{xml})
-            : $parser->parse_file($p->{xml});
+            ? $parser->parse_html_file($p->{file})
+            : $parser->parse_file($p->{file});
     }
 
     require Carp;
@@ -116,13 +114,13 @@ other than all uppercase.
 
 =head1 NAME
 
-Test::XPath - Test XML and HTML using XML::LibXML XPath expressions
+Test::XPath - Test XML and HTML content and structure with XPath expressions
 
 =end comment
 
 =head1 Name
 
-Test::XPath - Test XML and HTML using XML::LibXML XPath expressions
+Test::XPath - Test XML and HTML content and structure with XPath expressions
 
 =head1 Synopsis
 
@@ -130,7 +128,7 @@ Test::XPath - Test XML and HTML using XML::LibXML XPath expressions
   use Test::XPath;
 
   my $tx = Test::XPath->new(
-      html => $html,
+      html       => $html,
       no_network => 1,
   );
 
@@ -138,10 +136,9 @@ Test::XPath - Test XML and HTML using XML::LibXML XPath expressions
   $tx->xpath_is( $xpath, $want, $description );
 
   # Recursing into a document:
-  $tx->xpath_ok( $xpath, sub {
-      for my $elem (@_) {
-          $elem->xpath_is($xpath, $want, $description);
-      }
+  my @css = qw(foo.css bar.css);
+  $tx->xpath_ok( '/html/head/style', sub {
+      shift->xpath_is( './@src', shift @css);
   }, $description);
 
 =head1 Description
@@ -206,7 +203,23 @@ L<XML::LibXML::Parser options|XML::LibXML::Parser/"PARSER OPTIONS">, such as
 
 =head3 xpath_is
 
-  $xp->xpath_is()
+  $xp->xpath_is('/html/head/title', 'Welcome');
+
+=head3 xpath_isnt
+
+  $xp->xpath_isnt('/html/head/link[@type]', 'hello');
+
+=head3 xpath_like
+
+  $xp->xpath_like('/html/head/title', qr/^Foobar Inc.: .+/);
+
+=head3 xpath_unlike
+
+  $xp->xpath_unlike()
+
+=head3 xpath_cmp_ok
+
+  $xp->xpath_cmp_ok()
 
 =head3 xpath_ok
 
