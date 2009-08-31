@@ -1,7 +1,7 @@
 package Test::XPath;
 
 use strict;
-use 5.8.8;
+use 5.6.2;
 use XML::LibXML '1.69';
 use Test::Builder;
 

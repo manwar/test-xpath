@@ -15,7 +15,7 @@ Module::Build->new(
     requires           => {
         'Test::Builder' => '0.17',
         'XML::LibXML'   => '1.69',
-        'perl'          => 5.008,
+        'perl'          => 5.006002,
     },
     recommends         => {
         'Test::Pod'           => '1.20',
