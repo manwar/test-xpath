@@ -161,13 +161,31 @@ Test::XPath - Test XML and HTML content and structure with XPath expressions
 Use the power of XPath expressions to validate the structure of your XML and
 HTML documents.
 
-=head2 Introduction to XPath
+=head2 About XPath
 
-XPath is a powerful query language for XML documents.
+XPath is a powerful query language for XML documents. Test::XPath relies on
+the libxml2 implementation provided by L<XML::LibXML|XML::LibXML>. This is a
+complete implementation of the XPath spec, and is nice and efficient.
 
-=head2 Testing HTML Documents
+XPath works by selecting nodes in an XML document. Nodes, in general,
+correspond to the elements (or tags, if you prefer) defined in the XML. The
+W3Schools tutorial, L<http://www.w3schools.com/Xpath/default.asp> -- especially
+the part on syntax, L<http://www.w3schools.com/Xpath/xpath_syntax.asp> --
+provides a nice overview of XPath. See the XPath 1.0 W3C Recommendation,
+L<http://www.w3.org/TR/xpath>, for thorough (and quite readable)
+documentation.
 
+=head2 Testing HTML
 
+If you want to use XPath to test the content and structure of an HTML document,
+be sure to pass the C<is_html> option to C<new()>, like so:
+
+  my $xp = Test::XPath->new( xml => $html, is_html => 1 );
+
+Test::XPath will then use XML::LibXML's HTML parser to parser the document,
+rather than its XML parser. The upshot is that you won't have to worry about
+namespace prefixes, and XML::LibXML won't try to fetch any DTD specified in
+the DOCTYPE section of your HTML.
 
 =head1 Class Interface
 
@@ -236,17 +254,6 @@ L<XML::LibXML::Parser options|XML::LibXML::Parser/"PARSER OPTIONS">, such as
 
 =head1 Instance Interface
 
-=head2 Accessors
-
-=head3 C<node>
-
-Returns the current context node.
-
-=head3 C<xpc>
-
-Returns the L<XML::LibXML::XPathContext|XML::LibXML::XPathContext> used to
-execute the XPath expressions.
-
 =head2 Assertions
 
 =head3 C<ok>
@@ -284,6 +291,42 @@ If it finds a value, the value must be a true value (in the Perl sense).
 =head3 C<cmp_ok>
 
   $xp->cmp_ok()
+
+=head2 Accessors
+
+=head3 C<node>
+
+Returns the current context node.
+
+=head3 C<xpc>
+
+Returns the L<XML::LibXML::XPathContext|XML::LibXML::XPathContext> used to
+execute the XPath expressions.
+
+=head1 See Also
+
+=over
+
+=item *
+
+L<http://www.w3schools.com/Xpath/default.asp> - The W3Schools XPath Tutorial
+
+=item *
+
+L<XML::LibXML::XPathContext|XML::LibXML::XPathContext> - The XML::LibXML
+XPath evaluation library.
+
+=item *
+
+L<http://www.w3.org/TR/xpath> - XML Path Language (XPath) Version 1.0 W3C
+Recommendation
+
+=item *
+
+L<Test::XML::XPath|Test::XML::XPath> - Another library for testing XPath
+assertions using a functional interface. Ships with L<Test::XML|Test::XML>.
+
+=back
 
 =head1 Support
 
