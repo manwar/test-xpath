@@ -1,8 +1,11 @@
 #!/usr/bin/perl -w
 
 use strict;
+use File::Spec::Functions 'catfile';
 
-  use Test::More tests => 5;
+# Synopsis.
+
+  use Test::More tests => 22;
   use Test::XPath;
 
   my $xml = <<'XML';
@@ -29,3 +32,50 @@ XML
       my $css = shift @css;
       shift->is( './@src', $css, "Style src should be $css");
   }, 'Should have style');
+
+
+# ok()
+
+$tx = Test::XPath->new( xml => '<foo><bar><title>Welcome</title></bar></foo>');
+
+  $tx->ok( '//foo/bar', 'Should have bar element under foo element' );
+  $tx->ok('contains(//title, "Welcome")', 'Title should contain "Welcome"');
+
+# ok() recursive.
+
+$tx = Test::XPath->new( xml => '<assets><story id="1" /><story id="2" /></assets>');
+
+  my $i = 0;
+  $tx->ok('//assets/story', sub {
+      shift->is('./@id', ++$i, "ID should be $i in story $i");
+  }, 'Should have story elements' );
+
+# ok() deep atom example.
+
+$tx = Test::XPath->new( file => catfile(qw(t atom.xml)) );
+
+
+  $tx->ok('/feed/entry', sub {
+      $_->ok('./title', 'Should have a title');
+      $_->ok('./author', sub {
+          $_->is('./name',  'Mark Pilgrim',        'Mark should be author');
+          $_->is('./uri',   'http://example.org/', 'URI should be correct');
+          $_->is('./email', 'f8dy@example.com',    'Email should be right');
+      }, 'Should have author elements');
+  }, 'Should have entry elments');
+
+# xpc, adding an XPath function.
+
+  $tx->xpc->registerFunction( grep => sub {
+      my ($nodelist, $regex) =  @_;
+      my $result = XML::LibXML::NodeList->new;
+      for my $node ($nodelist->get_nodelist) {
+          $result->push($node) if $node->textContent =~ $regex;
+      }
+      return $result;
+  });
+
+  $tx->ok(
+      'grep(//author/email, "@example[.](?:com|org)$")',
+      'Should have example email'
+  );

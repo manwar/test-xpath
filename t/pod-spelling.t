@@ -16,3 +16,10 @@ namespace
 namespaces
 DOCTYPE
 DTD
+img
+html
+js
+lang
+libxml
+src
+uri
