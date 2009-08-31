@@ -1,7 +1,10 @@
 Test/XPath version 0.10
 =======================
 
-
+This library's module, Test::XPath, provides an interface for testing the
+content and structure of XML and HTML documents using XPath query expressions.
+This will be most useful for those who need to write TAP-emitting unit tests
+for HTML or XML output.
 
 INSTALLATION
 
@@ -22,8 +25,10 @@ Or, if you don't have Module::Build installed, type the following:
 Dependencies
 ------------
 
-Template::Declare::Bricolage has one none-core dependency: `XML::LibXML` -
-Perl Binding for libxml2.
+Test::XPath requires the following modules:
+
+* Test::Builder 0.17
+* XML::LibXML 1.69
 
 Copyright and Licence
 ---------------------
