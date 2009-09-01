@@ -275,11 +275,10 @@ There are a bunch of core functions in XPath. In addition to the (C<last()>
 and C<count()>) examples above, there are functions for node sets, booleans,
 numbers, and strings. See the XPath 1.0 W3C Recommendation,
 L<http://www.w3.org/TR/xpath>, for thorough (and quite readable) documentation
-of XPath syntax and support, including syntax and the core functions. The
-W3Schools tutorial, L<http://www.w3schools.com/Xpath/default.asp> --
-especially the part on syntax,
-L<http://www.w3schools.com/Xpath/xpath_syntax.asp> -- provides a nice overview
-of XPath.
+of XPath support, including syntax and the core functions. The W3Schools
+tutorial, L<http://www.w3schools.com/Xpath/default.asp> -- especially the part
+on syntax, L<http://www.w3schools.com/Xpath/xpath_syntax.asp> -- provides a
+nice overview of XPath.
 
 =head2 Testing HTML
 
