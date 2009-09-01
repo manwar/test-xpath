@@ -49,6 +49,12 @@ sub ok {
 
 }
 
+sub nok {
+    my ($self, $xpath, $desc) = @_;
+    my $Test = Test::Builder->new;
+    $Test->ok( !$self->{xpc}->exists($xpath, $self->{node}), $desc);
+}
+
 sub is     { Test::Builder::new->is_eq(   _findv(shift, shift), @_) }
 sub isnt   { Test::Builder::new->isnt_eq( _findv(shift, shift), @_) }
 sub like   { Test::Builder::new->like(    _findv(shift, shift), @_) }
@@ -94,6 +100,11 @@ sub _doc {
         'Test::XPath->new requires the "xml", "file", or "doc" parameter'
     );
 }
+
+# Add Test::XML::XPath compatibility?
+# sub like_xpath($$;$)   { __PACKAGE__->new( xml => shift )->ok(  @_ ) }
+# sub unlike_xpath($$;$) { __PACKAGE__->new( xml => shift )->nok( @_ ) }
+# sub is_xpath($$$;$)    { __PACKAGE__->new( xml => shift )->is(  @_ ) }
 
 1;
 __END__
@@ -388,6 +399,15 @@ this:
           $_->is( './email', 'f8dy@example.com',    'Email should be right' );
       }, 'Should have author elements' );
   }, 'Should have entry elments' );
+
+=head3 C<nok>
+
+  $tx->nok( $xpath, $description )
+
+The reverse of the non-recursive C<ok()>, the test succeeds if the XPath
+expression matches no part of the document.
+
+  $tx->nok( '//foo/bar[@id=0]', 'Should have no bar elements with Id 0' );
 
 =head3 C<is>
 

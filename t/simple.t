@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 use strict;
-use Test::Builder::Tester tests => 21;
+use Test::Builder::Tester tests => 23;
 use Test::More;
 
 BEGIN { use_ok 'Test::XPath' or die; }
@@ -101,3 +101,13 @@ test_test(
     title => 'Nonexistent node should be false in ok()',
 );
 
+# Try successful ok.
+test_out( 'ok 1 - whatever');
+$xp->nok('/html/head/foo', 'whatever');
+test_test('nok works');
+
+# Try failed ok.
+test_out('not ok 1 - whatever');
+test_err(qq{#   Failed test 'whatever'\n#   at t/simple.t line 112.});
+$xp->nok('/html/head/title', 'whatever');
+test_test('nok fail works');
