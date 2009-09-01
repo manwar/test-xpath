@@ -49,28 +49,14 @@ sub ok {
 
 }
 
-sub node { shift->{node} }
-sub xpc  { shift->{xpc}  }
+sub is     { Test::Builder::new->is_eq(   _findv(shift, shift), @_) }
+sub isnt   { Test::Builder::new->isnt_eq( _findv(shift, shift), @_) }
+sub like   { Test::Builder::new->like(    _findv(shift, shift), @_) }
+sub unlike { Test::Builder::new->unlike(  _findv(shift, shift), @_) }
+sub cmp_ok { Test::Builder::new->cmp_ok(  _findv(shift, shift), @_) }
 
-sub is {
-    Test::Builder::new->is_eq( _findv(shift, shift), @_);
-}
-
-sub isnt {
-    Test::Builder::new->isnt_eq( _findv(shift, shift), @_);
-}
-
-sub like {
-    Test::Builder::new->like( _findv(shift, shift), @_);
-}
-
-sub unlike {
-    Test::Builder::new->unlike( _findv(shift, shift), @_);
-}
-
-sub cmp_ok {
-    Test::Builder::new->cmp_ok( _findv(shift, shift), @_);
-}
+sub node   { shift->{node} }
+sub xpc    { shift->{xpc}  }
 
 sub _findv {
     my $self = shift;
