@@ -503,17 +503,17 @@ or "example.org":
 
 =item *
 
+L<http://www.w3.org/TR/xpath> - XML Path Language (XPath) Version 1.0 W3C
+Recommendation
+
+=item *
+
 L<http://www.w3schools.com/Xpath/default.asp> - The W3Schools XPath Tutorial
 
 =item *
 
 L<XML::LibXML::XPathContext|XML::LibXML::XPathContext> - The XML::LibXML
 XPath evaluation library.
-
-=item *
-
-L<http://www.w3.org/TR/xpath> - XML Path Language (XPath) Version 1.0 W3C
-Recommendation
 
 =item *
 
