@@ -31,7 +31,7 @@ XML
   $tx->ok( '/html/head/style[@type="text/css"]', sub {
       my $css = shift @css;
       shift->is( './@src', $css, "Style src should be $css");
-  }, 'Should have style');
+  }, 'Should have style' );
 
 
 # ok()
@@ -39,14 +39,14 @@ XML
 $tx = Test::XPath->new( xml => '<foo><bar><title>Welcome</title></bar></foo>');
 
   $tx->ok( '//foo/bar', 'Should have bar element under foo element' );
-  $tx->ok('contains(//title, "Welcome")', 'Title should contain "Welcome"');
+  $tx->ok( 'contains(//title, "Welcome")', 'Title should "Welcome"' );
 
 # ok() recursive.
 
 $tx = Test::XPath->new( xml => '<assets><story id="1" /><story id="2" /></assets>');
 
   my $i = 0;
-  $tx->ok('//assets/story', sub {
+  $tx->ok( '//assets/story', sub {
       shift->is('./@id', ++$i, "ID should be $i in story $i");
   }, 'Should have story elements' );
 
@@ -55,14 +55,14 @@ $tx = Test::XPath->new( xml => '<assets><story id="1" /><story id="2" /></assets
 $tx = Test::XPath->new( file => catfile(qw(t atom.xml)) );
 
 
-  $tx->ok('/feed/entry', sub {
-      $_->ok('./title', 'Should have a title');
-      $_->ok('./author', sub {
-          $_->is('./name',  'Mark Pilgrim',        'Mark should be author');
-          $_->is('./uri',   'http://example.org/', 'URI should be correct');
-          $_->is('./email', 'f8dy@example.com',    'Email should be right');
-      }, 'Should have author elements');
-  }, 'Should have entry elments');
+  $tx->ok( '/feed/entry', sub {
+      $_->ok( './title', 'Should have a title' );
+      $_->ok( './author', sub {
+          $_->is( './name',  'Mark Pilgrim',        'Mark should be author' );
+          $_->is( './uri',   'http://example.org/', 'URI should be correct' );
+          $_->is( './email', 'f8dy@example.com',    'Email should be right' );
+      }, 'Should have author elements' );
+  }, 'Should have entry elments' );
 
 # xpc, adding an XPath function.
 
@@ -73,7 +73,7 @@ $tx = Test::XPath->new( file => catfile(qw(t atom.xml)) );
           $result->push($node) if $node->textContent =~ $regex;
       }
       return $result;
-  });
+  } );
 
   $tx->ok(
       'grep(//author/email, "@example[.](?:com|org)$")',

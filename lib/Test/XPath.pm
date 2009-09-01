@@ -155,7 +155,7 @@ Test::XPath - Test XML and HTML content and structure with XPath expressions
   $tx->ok( '/html/head/style[@type="text/css"]', sub {
       my $css = shift @css;
       shift->is( './@src', $css, "Style src should be $css");
-  }, 'Should have style');
+  }, 'Should have style' );
 
 =head1 Description
 
@@ -165,13 +165,14 @@ HTML documents.
 =head2 About XPath
 
 XPath is a powerful query language for XML documents. Test::XPath relies on
-the libxml2 implementation provided by L<XML::LibXML|XML::LibXML>. This is a
-complete implementation of the XPath spec, and is nice and efficient.
+the libxml2 implementation provided by L<XML::LibXML|XML::LibXML>. libxml2 --
+pretty much the canonical library for XML processing -- provides an efficient
+and complete implementation of the XPath spec.
 
 XPath works by selecting nodes in an XML document. Nodes, in general,
-correspond to the elements (or tags, if you prefer) defined in the XML, text
-within those elements, attribute values, and comments. The expressions for
-making such selections use a file-system-type syntax, the basics of which are:
+correspond to the elements (a.k.a. tags) defined in the XML, text within those
+elements, attribute values, and comments. The expressions for making such
+selections use a URI-like syntax, the basics of which are:
 
 =over
 
@@ -276,9 +277,8 @@ and C<count()>) examples above, there are functions for node sets, booleans,
 numbers, and strings. See the XPath 1.0 W3C Recommendation,
 L<http://www.w3.org/TR/xpath>, for thorough (and quite readable) documentation
 of XPath support, including syntax and the core functions. The W3Schools
-tutorial, L<http://www.w3schools.com/Xpath/default.asp> -- especially the part
-on syntax, L<http://www.w3schools.com/Xpath/xpath_syntax.asp> -- provides a
-nice overview of XPath.
+tutorial, L<http://www.w3schools.com/Xpath/default.asp> provides a nice
+overview of XPath.
 
 =head2 Testing HTML
 
@@ -287,7 +287,7 @@ be sure to pass the C<is_html> option to C<new()>, like so:
 
   my $tx = Test::XPath->new( xml => $html, is_html => 1 );
 
-Test::XPath will then use XML::LibXML's HTML parser to parser the document,
+Test::XPath will then use XML::LibXML's HTML parser to parse the document,
 rather than its XML parser. The upshot is that you won't have to worry about
 namespace prefixes, and XML::LibXML won't try to fetch any DTD specified in
 the DOCTYPE section of your HTML.
@@ -364,15 +364,15 @@ the behavior of the parser.
 
 =head3 C<ok>
 
-  $tx->ok( $xpath, $description)
-  $tx->ok( $xpath, $coderef, $description)
+  $tx->ok( $xpath, $description )
+  $tx->ok( $xpath, $coderef, $description )
 
 Test that an XPath expression evaluated against the XML document returns a
 true value. If the XPath expression finds no nodes, the result will be false.
 If it finds a value, the value must be a true value (in the Perl sense).
 
   $tx->ok( '//foo/bar', 'Should have bar element under foo element' );
-  $tx->ok('contains(//title, "Welcome")', 'Title should contain "Welcome"');
+  $tx->ok( 'contains(//title, "Welcome")', 'Title should "Welcome"' );
 
 You can also run recursive tests against your document by passing a code
 reference as the second argument to C<ok()>. Once the initial selection has
@@ -383,7 +383,7 @@ test that each such element had an incremented "id" attribute, you'd do
 something like this:
 
   my $i = 0;
-  $tx->ok('//assets/story', sub {
+  $tx->ok( '//assets/story', sub {
       shift->is('./@id', ++$i, "ID should be $i in story $i");
   }, 'Should have story elements' );
 
@@ -391,30 +391,31 @@ For convenience, the XML::XPath object is also assigned to C<$_> for the
 duration of the call to the code reference. Either way, you can call C<ok()>
 and pass code references anywhere in the hierarchy. For example, to ensure
 that an Atom feed has entries and that each entry has a title, a link, and a
-very specific author element with name, uri, and email subnodes you can do:
+very specific author element with name, uri, and email subnodes, you can do
+this:
 
-  $tx->ok('/feed/entry', sub {
-      $_->ok('./title', 'Should have a title');
-      $_->ok('./author', sub {
-          $_->is('./name',  'Mark Pilgrim',        'Mark should be author');
-          $_->is('./uri',   'http://example.org/', 'URI should be correct');
-          $_->is('./email', 'f8dy@example.com',    'Email should be right');
-      }, 'Should have author elements');
-  }, 'Should have entry elments');
+  $tx->ok( '/feed/entry', sub {
+      $_->ok( './title', 'Should have a title' );
+      $_->ok( './author', sub {
+          $_->is( './name',  'Mark Pilgrim',        'Mark should be author' );
+          $_->is( './uri',   'http://example.org/', 'URI should be correct' );
+          $_->is( './email', 'f8dy@example.com',    'Email should be right' );
+      }, 'Should have author elements' );
+  }, 'Should have entry elments' );
 
 =head3 C<is>
 
 =head3 C<isnt>
 
-  $tx->is($xpath, $want, $description);
-  $tx->isnt($xpath, $dont_want, $description);
+  $tx->is( $xpath, $want, $description );
+  $tx->isnt( $xpath, $dont_want, $description );
 
 C<is()> and C<isnt()> compare the value returned by evaluation of the XPath
 expression against the document to a value using C<eq> and C<ne>,
 respectively.
 
-  $tx->is('/html/head/title', 'Welcome', 'Title should be welcoming');
-  $tx->isnt('/html/head/link/@type', 'hello', 'Link type should not');
+  $tx->is( '/html/head/title', 'Welcome', 'Title should be welcoming' );
+  $tx->isnt( '/html/head/link/@type', 'hello', 'Link type should not' );
 
 As with C<Test::More::ok()>, a failing test will yield a useful diagnostic
 message, something like:
@@ -428,30 +429,32 @@ message, something like:
 
 =head3 C<unlike>
 
-  $tx->like($xpath, qr/want/, $description);
-  $tx->unlike($xpath, qr/dont_want/, $description);
+  $tx->like( $xpath, qr/want/, $description );
+  $tx->unlike( $xpath, qr/dont_want/, $description );
 
 Similar to C<is()> and C<isnt()>, but these methods match the value returned
 by the XPath expression against a regular expression.
 
-  $tx->like('/html/head/title', qr/^Foobar Inc.: .+/, 'Title context');
-  $tx->unlike('/html/head/title', qr/Error/, 'Should be no error in title');
+  $tx->like( '/html/head/title', qr/^Foobar Inc.: .+/, 'Title context' );
+  $tx->unlike( '/html/head/title', qr/Error/, 'Should be no error in title' );
 
 As with C<Test::More::like()>, a failing test will yield a useful diagnostic
 message, something like:
 
   #   Failed test 'Title should, like, welcome'
   #   at t/foo.t line 62.
-  #                   'Hello'
-  #     doesn't match '(?-xism:^Bye$)'
+  #                   'Bye'
+  #     doesn't match '(?-xism:^Howdy$)'
 
 =head3 C<cmp_ok>
+
+  $tx->cmp_ok( $xpath, $op, $want, $description );
 
 Like C<Test::More::cmp_ok()>, this method allows you to compare the value
 returned by an XPath expression to a value using any binary Perl operator.
 
-  $tx->cmp_ok('/html/head/title', 'eq', 'Welcome');
-  $tx->cmp_ok('//story[1]/@id', '==', 1);
+  $tx->cmp_ok( '/html/head/title', 'eq', 'Welcome' );
+  $tx->cmp_ok( '//story[1]/@id', '==', 1 );
 
 As with C<Test::More::cmp_ok()>, a failing test will yield a useful diagnostic
 message, something like:
@@ -466,17 +469,19 @@ message, something like:
 
 =head3 C<node>
 
-Returns the current context node. This will usually be the node for the
-entire document, but in recursive tests run in code references passed to
-C<ok()>, the node will be one of the nodes selected for the test.
+  my $node = $tx->node;
+
+Returns the current context node. This will usually be the node for the entire
+document, but in recursive tests run in code references passed to C<ok()>, the
+node will be one of the nodes selected for the test.
 
 =head3 C<xpc>
 
 Returns the L<XML::LibXML::XPathContext|XML::LibXML::XPathContext> used to
 execute the XPath expressions. It can be useful to access this object in order
-to, for example, create new XPath functions to use in your tests. For example,
-say that you wanted to define a C<grep()> XPath function that returns true for
-a node value that matches a regular expression. You can define one like so:
+to create new XPath functions to use in your tests. For example, say that you
+wanted to define a C<grep()> XPath function that returns true for a node value
+that matches a regular expression. You can define one like so:
 
   $tx->xpc->registerFunction( grep => sub {
       my ($nodelist, $regex) =  @_;
@@ -485,12 +490,12 @@ a node value that matches a regular expression. You can define one like so:
           $result->push($node) if $node->textContent =~ $regex;
       }
       return $result;
-  });
+  } );
 
 You can then use C<grep()> like any other XPath function to select only those
 nodes with content matching a regular expression. This example makes sure that
-there are node email "nodes" under "author" nodes that end in "@example.com"
-or "example.org":
+there are "email" nodes under "author" nodes that end in "@example.com" or
+"example.org":
 
   $tx->ok(
       'grep(//author/email, "@example[.](?:com|org)$")',
@@ -504,11 +509,11 @@ or "example.org":
 =item *
 
 L<http://www.w3.org/TR/xpath> - XML Path Language (XPath) Version 1.0 W3C
-Recommendation
+Recommendation.
 
 =item *
 
-L<http://www.w3schools.com/Xpath/default.asp> - The W3Schools XPath Tutorial
+L<http://www.w3schools.com/Xpath/default.asp> - The W3Schools XPath Tutorial.
 
 =item *
 
@@ -555,4 +560,3 @@ This module is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
 
 =cut
-
