@@ -49,7 +49,7 @@ sub ok {
 
 }
 
-sub nok {
+sub not_ok {
     my ($self, $xpath, $desc) = @_;
     my $Test = Test::Builder->new;
     $Test->ok( !$self->{xpc}->exists($xpath, $self->{node}), $desc);
@@ -102,9 +102,9 @@ sub _doc {
 }
 
 # Add Test::XML::XPath compatibility?
-# sub like_xpath($$;$)   { __PACKAGE__->new( xml => shift )->ok(  @_ ) }
-# sub unlike_xpath($$;$) { __PACKAGE__->new( xml => shift )->nok( @_ ) }
-# sub is_xpath($$$;$)    { __PACKAGE__->new( xml => shift )->is(  @_ ) }
+# sub like_xpath($$;$)   { __PACKAGE__->new( xml => shift )->ok(     @_ ) }
+# sub unlike_xpath($$;$) { __PACKAGE__->new( xml => shift )->not_ok( @_ ) }
+# sub is_xpath($$$;$)    { __PACKAGE__->new( xml => shift )->is(     @_ ) }
 
 1;
 __END__
@@ -400,14 +400,14 @@ this:
       }, 'Should have author elements' );
   }, 'Should have entry elments' );
 
-=head3 C<nok>
+=head3 C<not_ok>
 
-  $tx->nok( $xpath, $description )
+  $tx->not_ok( $xpath, $description )
 
 The reverse of the non-recursive C<ok()>, the test succeeds if the XPath
 expression matches no part of the document.
 
-  $tx->nok( '//foo/bar[@id=0]', 'Should have no bar elements with Id 0' );
+  $tx->not_ok( '//foo/bar[@id=0]', 'Should have no bar elements with Id 0' );
 
 =head3 C<is>
 

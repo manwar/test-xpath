@@ -103,11 +103,11 @@ test_test(
 
 # Try successful ok.
 test_out( 'ok 1 - whatever');
-$xp->nok('/html/head/foo', 'whatever');
-test_test('nok works');
+$xp->not_ok('/html/head/foo', 'whatever');
+test_test('not_ok works');
 
 # Try failed ok.
 test_out('not ok 1 - whatever');
 test_err(qq{#   Failed test 'whatever'\n#   at t/simple.t line 112.});
-$xp->nok('/html/head/title', 'whatever');
-test_test('nok fail works');
+$xp->not_ok('/html/head/title', 'whatever');
+test_test('not_ok fail works');
