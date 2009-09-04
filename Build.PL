@@ -10,10 +10,10 @@ Module::Build->new(
     },
     build_requires     => {
         'Module::Build' => '0.30',
-        'Test::More'    => '0.17',
+        'Test::More'    => '0.70',
     },
     requires           => {
-        'Test::Builder' => '0.17',
+        'Test::Builder' => '0.70',
         'XML::LibXML'   => '1.69',
         'perl'          => 5.006002,
     },

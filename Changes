@@ -3,6 +3,9 @@ Revision history for Perl extension Test::XPath.
 0.11
       - Edited the documentation for accuracy, grammar, etc.
       - Added `not_ok()`.
+      - Updated minimum Test::More requirement to 0.70. Sometime between 0.64
+        and 0.70, the format of diagnostics changed, so older versions make
+        Test::XPath tests fail.
 
 0.10  2009-08-31T21:34:37
       - Initial version.
