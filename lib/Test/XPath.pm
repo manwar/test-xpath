@@ -552,6 +552,11 @@ XPath evaluation library.
 L<Test::XML::XPath|Test::XML::XPath> - Another library for testing XPath
 assertions using a functional interface. Ships with L<Test::XML|Test::XML>.
 
+=item *
+
+L<Test::HTML::Content|Test::HTML::Content> - Another module that that offers
+C<xpath_ok()> and C<no_xpath()> test functions.
+
 =back
 
 =head1 Support
