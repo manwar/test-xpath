@@ -397,6 +397,7 @@ something like this:
 Even better, use L<PerlX::MethodCallWithBlock|PerlX::MethodCallWithBlock>
 to pass a block to the method instead of a code reference:
 
+  use PerlX::MethodCallWithBlock;
   my $i = 0;
   $tx->ok( '//assets/story', 'Should have story elements' ) {
       shift->is('./@id', ++$i, "ID should be $i in story $i");
