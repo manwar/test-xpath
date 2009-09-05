@@ -159,6 +159,8 @@ Test::XPath - Test XML and HTML content and structure with XPath expressions
 
   # Better yet, use PerlX::MethodCallWithBlock:
   use PerlX::MethodCallWithBlock;
+  my @css = qw(foo.css bar.css);
+  use PerlX::MethodCallWithBlock;
   $tx->ok( '/html/head/style[@type="text/css"]', 'Should have style' ) {
       my $css = shift @css;
       shift->is( './@src', $css, "Style src should be $css");
