@@ -5,6 +5,7 @@ use File::Spec::Functions 'catfile';
 
 # Synopsis.
 
+#  use Test::More tests => 28; # Use when PerlX::MethodCallWithBlock tests uncommented.
   use Test::More tests => 22;
   use Test::XPath;
 
