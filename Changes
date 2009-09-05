@@ -1,6 +1,7 @@
 Revision history for Perl extension Test::XPath.
 
 0.12
+      - Added support for PerlX::MethodCallWithBlock.
 
 0.11  2009-09-04T22:16:11
       - Edited the documentation for accuracy, grammar, etc.

@@ -27,6 +27,9 @@ sub ok {
     my $xpc  = $self->{xpc};
     my $Test = Test::Builder->new;
 
+    # Code and desc can be reversed, to support PerlX::MethodCallWithBlock.
+    ($code, $desc) = ($desc, $code) if ref $desc eq 'CODE';
+
     if (ref $code eq 'CODE') {
         # Gonna do some recursive testing.
         my @nodes = $xpc->findnodes($xpath, $self->{node})
@@ -153,6 +156,13 @@ Test::XPath - Test XML and HTML content and structure with XPath expressions
       my $css = shift @css;
       shift->is( './@src', $css, "Style src should be $css");
   }, 'Should have style' );
+
+  # Better yet, use PerlX::MethodCallWithBlock:
+  use PerlX::MethodCallWithBlock;
+  $tx->ok( '/html/head/style[@type="text/css"]', 'Should have style' ) {
+      my $css = shift @css;
+      shift->is( './@src', $css, "Style src should be $css");
+  };
 
 =head1 Description
 
@@ -383,6 +393,14 @@ something like this:
   $tx->ok( '//assets/story', sub {
       shift->is('./@id', ++$i, "ID should be $i in story $i");
   }, 'Should have story elements' );
+
+Even better, use L<PerlX::MethodCallWithBlock|PerlX::MethodCallWithBlock>
+to pass a block to the method instead of a code reference:
+
+  my $i = 0;
+  $tx->ok( '//assets/story', 'Should have story elements' ) {
+      shift->is('./@id', ++$i, "ID should be $i in story $i");
+  };
 
 For convenience, the XML::XPath object is also assigned to C<$_> for the
 duration of the call to the code reference. Either way, you can call C<ok()>
