@@ -19,6 +19,8 @@ sub new {
     return bless {
         xpc  => $xpc,
         node => $doc->documentElement,
+        gen  => $p{xpath_generator}
+          || ($p{css_selector} ? \&_css_selector : sub { shift })
     };
 }
 
@@ -26,6 +28,7 @@ sub ok {
     my ($self, $xpath, $code, $desc) = @_;
     my $xpc  = $self->{xpc};
     my $Test = Test::Builder->new;
+    $xpath = $self->{gen}->($xpath);
 
     # Code and desc can be reversed, to support PerlX::MethodCallWithBlock.
     ($code, $desc) = ($desc, $code) if ref $desc eq 'CODE';
@@ -54,6 +57,7 @@ sub ok {
 
 sub not_ok {
     my ($self, $xpath, $desc) = @_;
+    $xpath = $self->{gen}->($xpath);
     my $Test = Test::Builder->new;
     $Test->ok( !$self->{xpc}->exists($xpath, $self->{node}), $desc);
 }
@@ -69,7 +73,7 @@ sub xpc    { shift->{xpc}  }
 
 sub _findv {
     my $self = shift;
-    $self->{xpc}->findvalue(shift, $self->{node});
+    $self->{xpc}->findvalue($self->{gen}->(shift), $self->{node});
 }
 
 sub _doc {
@@ -102,6 +106,14 @@ sub _doc {
     Carp::carp(
         'Test::XPath->new requires the "xml", "file", or "doc" parameter'
     );
+}
+
+sub _css_selector {
+    my $path = shift;
+    eval 'require HTML::Selector::XPath';
+    die "Please install HTML::Selector::XPath to use CSS selectors"
+        if $@;
+    return HTML::Selector::XPath->new($path)->to_xpath;
 }
 
 # Add Test::XML::XPath compatibility?
@@ -364,6 +376,28 @@ Optional hash reference of
 L<XML::LibXML::Parser options|XML::LibXML::Parser/"PARSER OPTIONS">, such as
 "validation", "recover", and "no_network". These can be useful for tweaking
 the behavior of the parser.
+
+=item C<css_selector>
+
+  css_selector => 1,
+
+Any paths passed to ok(), is() etc will be first preprocessed by
+HTML::Selector::XPath. This allows you to use CSS selector syntax, which can
+be more compact for simple expressions. For example:
+
+    $tx->is('div#content div.article h1', '...')
+
+Is equivilent to:
+
+    $tx->is('//div[@id="content"]//div[@class="article"]//h1', '...')
+
+=item C<path_generator>
+
+  path_generator => sub { my $xpath = shift; }
+
+Allows a subroutine reference to be passed in, which will be used whenever a XPath
+is required. This allows you to transform the XPath, for example you may have
+some custom syntax which is much more concise than an XPath.
 
 =back
 
