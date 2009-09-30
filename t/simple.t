@@ -19,8 +19,9 @@ $xp->ok('/html/head/title', 'whatever');
 test_test('ok works');
 
 # Try failed ok.
+my $file = __FILE__;
 test_out('not ok 1 - whatever');
-test_err(qq{#   Failed test 'whatever'\n#   at t/simple.t line 24.});
+test_err(qq{#   Failed test 'whatever'\n#   at $file line 25.});
 $xp->ok('/html/head/foo', 'whatever');
 test_test('ok fail works');
 
@@ -108,6 +109,6 @@ test_test('not_ok works');
 
 # Try failed ok.
 test_out('not ok 1 - whatever');
-test_err(qq{#   Failed test 'whatever'\n#   at t/simple.t line 112.});
+test_err(qq{#   Failed test 'whatever'\n#   at $file line 113.});
 $xp->not_ok('/html/head/title', 'whatever');
 test_test('not_ok fail works');

@@ -18,12 +18,7 @@ Module::Build->new(
     recommends => {
         'Test::Pod'           => '1.20',
         'Test::Pod::Coverage' => '1.06',
-    },
-    auto_features => {
-        selectors => {
-            description => 'CSS selectors support',
-            requires    => { 'HTML::Selector::XPath' => '0.03', }
-        }
+        'HTML::Selector::XPath' => '0.03',
     },
     meta_merge => {
         resources => {
