@@ -35,7 +35,7 @@ sub new {
                 sub { shift },
             }
         },
-    };
+    }, $class;
 }
 
 sub ok {
