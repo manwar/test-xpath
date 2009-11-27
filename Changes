@@ -4,6 +4,8 @@ Revision history for Perl extension Test::XPath.
       - Added the `filter` option, which allows custom filtering of XPath
         expressions and the use of CSS selectors instead of XPath expresions.
         Based on a patch from Oliver Charles.
+      - Fixed bug that prevented Test::XPath from being subclassable.
+        Patch from Michael Schout (with tests, huzzah!).
 
 0.12  2009-09-05T23:30:05
       - Added support for PerlX::MethodCallWithBlock.
