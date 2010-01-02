@@ -99,7 +99,11 @@ sub _doc {
     # Apply any parser options.
     if (my $opts = $p->{options}) {
         while (my ($k, $v) = each %{ $opts }) {
-            $parser->$k($v);
+            if (my $meth = $parser->can($k)) {
+                $parser->$meth($v)
+            } else {
+                $parser->set_option($k => $v);
+            }
         }
     }
 
@@ -384,8 +388,8 @@ you want to write reasonable XPath expressions.
 
 Optional hash reference of
 L<XML::LibXML::Parser options|XML::LibXML::Parser/"PARSER OPTIONS">, such as
-"validation", "recover", and "no_network". These can be useful for tweaking
-the behavior of the parser.
+"validation", "recover", "suppress_errors", and "no_network". These can be
+useful for tweaking the behavior of the parser.
 
 =item C<filter>
 

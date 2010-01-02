@@ -6,6 +6,8 @@ Revision history for Perl extension Test::XPath.
         Based on a patch from Oliver Charles.
       - Fixed bug that prevented Test::XPath from being subclassable.
         Patch from Michael Schout (with tests, huzzah!).
+      - Added support for XML::LibXML options, such as "suppres_errors", that
+        not set by accessors. Thanks to Michael S. Fischer for the report.
 
 0.12  2009-09-05T23:30:05
       - Added support for PerlX::MethodCallWithBlock.

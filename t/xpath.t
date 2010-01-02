@@ -22,6 +22,7 @@ ok +Test::XPath->new(
     options     => {
         no_network  => 1,
         keep_blanks => 1,
+        suppress_errors => 1
     },
 ), 'Should be able to configure the parser';
 
