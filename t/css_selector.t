@@ -28,7 +28,7 @@ $xp->ok('> html > head > title', 'whatever');
 test_test('ok works');
 
 # Try failed ok.
-my $file = __FILE__;
+my $file = File::Spec->catfile(split m{/} => __FILE__);
 test_out('not ok 1 - whatever');
 test_err(qq{#   Failed test 'whatever'\n#   at $file line 34.});
 $xp->ok('> html > head > foo', 'whatever');
@@ -46,7 +46,6 @@ SKIP: {
 
     $xp->ok( 'html > body > p', sub {
         shift->ok('> em', sub {
-             diag 'em: ', $_[0]->{node}->toString;
              $_->ok('> b', 'b');
          }, 'em');
     }, 'p');
@@ -97,6 +96,6 @@ test_test('not_ok works');
 
 # Try failed ok.
 test_out('not ok 1 - whatever');
-test_err(qq{#   Failed test 'whatever'\n#   at $file line 101.});
+test_err(qq{#   Failed test 'whatever'\n#   at $file line 100.});
 $xp->not_ok(' > html > head > title', 'whatever');
 test_test('not_ok fail works');
