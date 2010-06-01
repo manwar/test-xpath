@@ -134,17 +134,6 @@ sub _doc {
 1;
 __END__
 
-=begin comment
-
-Fake-out Module::Build. Delete if it ever changes to support =head1 headers
-other than all uppercase.
-
-=head1 NAME
-
-Test::XPath - Test XML and HTML content and structure with XPath expressions
-
-=end comment
-
 =head1 Name
 
 Test::XPath - Test XML and HTML content and structure with XPath expressions
@@ -200,9 +189,9 @@ HTML documents.
 =head2 About XPath
 
 XPath is a powerful query language for XML documents. Test::XPath relies on
-the libxml2 implementation provided by L<XML::LibXML|XML::LibXML>. libxml2 --
-pretty much the canonical library for XML processing -- provides an efficient
-and complete implementation of the XPath spec.
+the libxml2 implementation provided by L<XML::LibXML>. libxml2 -- pretty much
+the canonical library for XML processing -- provides an efficient and complete
+implementation of the XPath spec.
 
 XPath works by selecting nodes in an XML document. Nodes, in general,
 correspond to the elements (a.k.a. tags) defined in the XML, text within those
@@ -309,11 +298,11 @@ Select a count of all "p" nodes in the document.
 
 There are a bunch of core functions in XPath. In addition to the (C<last()>
 and C<count()>) examples above, there are functions for node sets, booleans,
-numbers, and strings. See the XPath 1.0 W3C Recommendation,
-L<http://www.w3.org/TR/xpath>, for thorough (and quite readable) documentation
-of XPath support, including syntax and the core functions. The W3Schools
-tutorial, L<http://www.w3schools.com/Xpath/default.asp> provides a nice
-overview of XPath.
+numbers, and strings. See the
+L<XPath 1.0 W3C Recommendation|http://www.w3.org/TR/xpath>, for thorough (and
+quite readable) documentation of XPath support, including syntax and the core
+functions. The L<W3Schools tutorial|http://www.w3schools.com/Xpath/default.asp>
+provides a nice overview of XPath.
 
 =head2 Testing HTML
 
@@ -406,9 +395,8 @@ There is currently only one built-in filter, C<css_selector>. So if you pass
   filter => 'css_selector',
 
 Then any paths passed to C<ok()>, C<is()>, etc., will be passed through
-L<HTML::Selector::XPath|HTML::Selector::XPath>. This allows you to use CSS
-selector syntax, which can be more compact for simple expressions. For
-example, this CSS selector:
+L<HTML::Selector::XPath>. This allows you to use CSS selector syntax, which
+can be more compact for simple expressions. For example, this CSS selector:
 
     $tx->is('div#content div.article h1', '...')
 
@@ -447,8 +435,8 @@ something like this:
       shift->is('./@id', ++$i, "ID should be $i in story $i");
   }, 'Should have story elements' );
 
-Even better, use L<PerlX::MethodCallWithBlock|PerlX::MethodCallWithBlock>
-to pass a block to the method instead of a code reference:
+Even better, use L<PerlX::MethodCallWithBlock> to pass a block to the method
+instead of a code reference:
 
   use PerlX::MethodCallWithBlock;
   my $i = 0;
@@ -555,11 +543,11 @@ node will be one of the nodes selected for the test.
 
 =head3 C<xpc>
 
-Returns the L<XML::LibXML::XPathContext|XML::LibXML::XPathContext> used to
-execute the XPath expressions. It can be useful to access this object in order
-to create new XPath functions to use in your tests. For example, say that you
-wanted to define a C<grep()> XPath function that returns true for a node value
-that matches a regular expression. You can define one like so:
+Returns the L<XML::LibXML::XPathContext> used to execute the XPath
+expressions. It can be useful to access this object in order to create new
+XPath functions to use in your tests. For example, say that you wanted to
+define a C<grep()> XPath function that returns true for a node value that
+matches a regular expression. You can define one like so:
 
   $tx->xpc->registerFunction( grep => sub {
       my ($nodelist, $regex) =  @_;
@@ -586,58 +574,45 @@ there are "email" nodes under "author" nodes that end in "@example.com" or
 
 =item *
 
-L<http://www.w3.org/TR/xpath> - XML Path Language (XPath) Version 1.0 W3C
-Recommendation.
+L<XML Path Language (XPath) Version 1.0 W3C Recommendation|http://www.w3.org/TR/xpath>.
 
 =item *
 
-L<http://www.w3schools.com/Xpath/default.asp> - The W3Schools XPath Tutorial.
+L<W3Schools XPath Tutorial|http://www.w3schools.com/Xpath/default.asp>.
 
 =item *
 
-L<XML::LibXML::XPathContext|XML::LibXML::XPathContext> - The XML::LibXML
-XPath evaluation library.
+L<XML::LibXML::XPathContext> - The XML::LibXML XPath evaluation library.
 
 =item *
 
-L<Test::XML::XPath|Test::XML::XPath> - Another library for testing XPath
-assertions using a functional interface. Ships with L<Test::XML|Test::XML>.
+L<Test::XML::XPath> - Another library for testing XPath assertions using a
+functional interface. Ships with L<Test::XML>.
 
 =item *
 
-L<Test::HTML::Content|Test::HTML::Content> - Another module that that offers
-C<xpath_ok()> and C<no_xpath()> test functions.
+L<Test::HTML::Content> - Another module that that offers C<xpath_ok()> and
+C<no_xpath()> test functions.
 
 =back
 
 =head1 Support
 
-This module is stored in an open GitHub repository,
-L<http://github.com/theory/test-xpath/tree/>. Feel free to fork and
+This module is stored in an open L<GitHub
+repository|http://github.com/theory/test-xpath/tree/>. Feel free to fork and
 contribute!
 
-Please file bug reports at L<http://github.com/theory/test-xpath/issues/>.
+Please file bug reports via L<GitHub
+Issues|http://github.com/theory/test-xpath/issues/> or by sending mail to
+L<bug-Test-XPath@rt.cpan.org|mailto:bug-Test-XPath@rt.cpan.org>.
 
 =head1 Author
 
-=begin comment
-
-Fake-out Module::Build. Delete if it ever changes to support =head1 headers
-other than all uppercase.
-
-=head1 AUTHOR
-
-=end comment
-
-=over
-
-=item David E. Wheeler <david@kineticode.com>
-
-=back
+David E. Wheeler <david@kineticode.com>
 
 =head1 Copyright and License
 
-Copyright (c) 2009 David E. Wheeler. Some Rights Reserved.
+Copyright (c) 2009-2010 David E. Wheeler. Some Rights Reserved.
 
 This module is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
