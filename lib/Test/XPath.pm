@@ -121,7 +121,7 @@ sub _doc {
     }
 
     require Carp;
-    Carp::carp(
+    Carp::croak(
         'Test::XPath->new requires the "xml", "file", or "doc" parameter'
     );
 }

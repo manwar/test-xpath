@@ -1,6 +1,9 @@
 Revision history for Perl extension Test::XPath.
 
 0.14
+      - The constructor now croaks instead of carping when no XML or HTML
+        parameter has been pased to it. Thanks to GitHub user "sshaw" for the
+        spot.
 
 0.13  2010-06-01T18:39:28
       - Added the `filter` option, which allows custom filtering of XPath
