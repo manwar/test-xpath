@@ -6,6 +6,9 @@ Revision history for Perl extension Test::XPath.
         spot.
       - Added the `find_value()` method to provide easy access to values in
         the document relative to the current node. Suggested by Moritz Onken.
+      - XPaths generated via the `css_selector` filter are now properly
+        created relative to th current node. That means you can use CSS
+        expressions in the recursive block passed to `ok()`.
 
 0.13  2010-06-01T18:39:28
       - Added the `filter` option, which allows custom filtering of XPath

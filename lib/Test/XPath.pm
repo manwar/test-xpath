@@ -27,7 +27,20 @@ sub new {
                     eval 'require HTML::Selector::XPath';
                     die 'Please install HTML::Selector::XPath to use CSS selectors'
                         if $@;
-                    sub { HTML::Selector::XPath::selector_to_xpath(shift) }
+                    sub {
+                        my $xpath = do {
+                            my $xp = HTML::Selector::XPath->new(shift)->to_xpath(root => '//');
+                            if (eval { $_->isa(__PACKAGE__) } && $_->node ne $doc->documentElement) {
+                                # Make it relative to the current node.
+                                $xp =~ s{^///[*]}{.};
+                            } else {
+                                # Start from the top.
+                                $xp =~ s{^///[*]}{};
+                            }
+                            $xp;
+                        };
+                        return $xpath;
+                    }
                 } else {
                     die "Unknown filter: $f\n";
                 }
@@ -42,7 +55,7 @@ sub ok {
     my ($self, $xpath, $code, $desc) = @_;
     my $xpc  = $self->{xpc};
     my $Test = Test::Builder->new;
-    $xpath   = $self->{filter}->($xpath);
+    $xpath   = $self->{filter}->($xpath, $self);
 
     # Code and desc can be reversed, to support PerlX::MethodCallWithBlock.
     ($code, $desc) = ($desc, $code) if ref $desc eq 'CODE';

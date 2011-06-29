@@ -35,22 +35,19 @@ $xp->ok('> html > head > foo', 'whatever');
 test_test('ok fail works');
 
 # Try a recursive call.
-SKIP: {
-    skip 'http://rt.cpan.org/Ticket/Display.html?id=50131' => 1;
+test_out( 'ok 1 - p');
+test_out( 'ok 2 - em');
+test_out( 'ok 3 - b');
+test_out( 'ok 4 - em');
+test_out( 'ok 5 - b');
 
-    test_out( 'ok 1 - p');
-    test_out( 'ok 2 - em');
-    test_out( 'ok 3 - b');
-    test_out( 'ok 4 - em');
-    test_out( 'ok 5 - b');
+$xp->ok( '> html > body > p', sub {
+    shift->ok('> em', sub {
+        $_->ok('> b', 'b');
+    }, 'em');
+}, 'p');
+test_test('recursive ok should work');
 
-    $xp->ok( 'html > body > p', sub {
-        shift->ok('> em', sub {
-             $_->ok('> b', 'b');
-         }, 'em');
-    }, 'p');
-    test_test('recursive ok should work');
-}
 
 # Try is, like, and cmp_ok.
 $xp->is( ' > html > head > title', 'Hello', 'is should work');
@@ -96,6 +93,6 @@ test_test('not_ok works');
 
 # Try failed ok.
 test_out('not ok 1 - whatever');
-test_err(qq{#   Failed test 'whatever'\n#   at $file line 100.});
+test_err(qq{#   Failed test 'whatever'\n#   at $file line 97.});
 $xp->not_ok(' > html > head > title', 'whatever');
 test_test('not_ok fail works');

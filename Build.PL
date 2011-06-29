@@ -18,7 +18,7 @@ Module::Build->new(
     recommends => {
         'Test::Pod'           => '1.20',
         'Test::Pod::Coverage' => '1.06',
-        'HTML::Selector::XPath' => '0.03',
+        'HTML::Selector::XPath' => '0.06',
     },
     meta_merge => {
         resources => {
