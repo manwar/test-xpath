@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 use strict;
-use Test::More tests => 56;
+use Test::More tests => 57;
 #use Test::More 'no_plan';
 use File::Spec::Functions 'catfile';
 use utf8;
@@ -47,6 +47,9 @@ $xp->ok( '/html/body/p', sub {
         $_->ok('./b', 'Find b under em');
     }, 'Find em under para');
 }, 'Find paragraphs');
+
+# Make sure that find_value() works.
+is $xp->find_value('/html/head/title'), 'Hello', 'find_value should work';
 
 # Try is, like, and cmp_ok.
 $xp->is( '/html/head/title', 'Hello', 'is should work');

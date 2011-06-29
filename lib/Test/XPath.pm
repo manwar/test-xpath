@@ -76,16 +76,16 @@ sub not_ok {
     $Test->ok( !$self->{xpc}->exists($xpath, $self->{node}), $desc);
 }
 
-sub is     { Test::Builder::new->is_eq(   _findv(shift, shift), @_) }
-sub isnt   { Test::Builder::new->isnt_eq( _findv(shift, shift), @_) }
-sub like   { Test::Builder::new->like(    _findv(shift, shift), @_) }
-sub unlike { Test::Builder::new->unlike(  _findv(shift, shift), @_) }
-sub cmp_ok { Test::Builder::new->cmp_ok(  _findv(shift, shift), @_) }
+sub is     { Test::Builder::new->is_eq(   shift->find_value(shift), @_) }
+sub isnt   { Test::Builder::new->isnt_eq( shift->find_value(shift), @_) }
+sub like   { Test::Builder::new->like(    shift->find_value(shift), @_) }
+sub unlike { Test::Builder::new->unlike(  shift->find_value(shift), @_) }
+sub cmp_ok { Test::Builder::new->cmp_ok(  shift->find_value(shift), @_) }
 
 sub node   { shift->{node} }
 sub xpc    { shift->{xpc}  }
 
-sub _findv {
+sub find_value {
     my $self = shift;
     $self->{xpc}->findvalue( $self->{filter}->(shift), $self->{node} );
 }
@@ -567,6 +567,19 @@ there are "email" nodes under "author" nodes that end in "@example.com" or
       'grep(//author/email, "@example[.](?:com|org)$")',
       'Should have example email'
   );
+
+=head2 Utilities
+
+=head3 C<find_value>
+
+  my $val = $tx->find_value($xpath);
+
+Returns the value returned by evaluation of the XPath expression against the
+document relative to the current node. This is the method used internally to
+fetch the value to be compared by C<is>, C<isnt>, C<like>, C<unlike>, and
+C<cmp_ok>. A simple example:
+
+  my $val = $tx->find_value('/html/head/title');
 
 =head1 See Also
 

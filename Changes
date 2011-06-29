@@ -4,6 +4,8 @@ Revision history for Perl extension Test::XPath.
       - The constructor now croaks instead of carping when no XML or HTML
         parameter has been pased to it. Thanks to GitHub user "sshaw" for the
         spot.
+      - Added the `find_value()` method to provide easy access to values in
+        the document relative to the current node. Suggested by Moritz Onken.
 
 0.13  2010-06-01T18:39:28
       - Added the `filter` option, which allows custom filtering of XPath
