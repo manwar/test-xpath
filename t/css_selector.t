@@ -24,7 +24,7 @@ ok my $xp = Test::XPath->new(
 
 # Try successful ok.
 test_out( 'ok 1 - whatever');
-$xp->ok('html > head > title', 'whatever');
+$xp->ok('> html > head > title', 'whatever');
 test_test('ok works');
 
 # Try failed ok.
