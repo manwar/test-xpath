@@ -24,7 +24,7 @@ sub new {
                 if (ref $f eq 'CODE') {
                     $f;
                 } elsif ($f eq 'css_selector') {
-                    eval 'require HTML::Selector::XPath';
+                    eval 'use HTML::Selector::XPath 0.06';
                     die 'Please install HTML::Selector::XPath to use CSS selectors'
                         if $@;
                     sub {

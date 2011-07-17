@@ -6,7 +6,7 @@ use Test::More;
 use File::Spec;
 
 BEGIN {
-    eval 'require HTML::Selector::XPath';
+    eval 'use HTML::Selector::XPath 0.06';
     plan skip_all => 'Install HTML::Selector::XPath to use CSS selectors'
         if $@;
     plan tests => 16;

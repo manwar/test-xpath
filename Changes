@@ -3,6 +3,9 @@ Revision history for Perl extension Test::XPath.
 0.15
       - Require XML::LibXML 1.70, as that seems to be the first version to
         offer `set_option()`.
+      - Make sure that HTML::Selector::XPath 0.06 or higher is installed
+        before allowing use of CSS selectors. Should fix some test failures
+        from cpan-testers.
 
 0.14  2011-06-29T18:31:39
       - The constructor now croaks instead of carping when no XML or HTML
