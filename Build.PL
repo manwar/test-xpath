@@ -12,7 +12,7 @@ Module::Build->new(
     },
     requires => {
         'Test::Builder' => '0.70',
-        'XML::LibXML'   => '1.69',
+        'XML::LibXML'   => '1.70',
         'perl'          => 5.006002,
     },
     recommends => {

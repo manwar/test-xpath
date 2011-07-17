@@ -1,6 +1,8 @@
 Revision history for Perl extension Test::XPath.
 
 0.15
+      - Require XML::LibXML 1.70, as that seems to be the first version to
+        offer `set_option()`.
 
 0.14  2011-06-29T18:31:39
       - The constructor now croaks instead of carping when no XML or HTML
