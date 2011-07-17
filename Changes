@@ -1,6 +1,6 @@
 Revision history for Perl extension Test::XPath.
 
-0.15
+0.15  2011-07-17T02:40:11
       - Require XML::LibXML 1.70, as that seems to be the first version to
         offer `set_option()`.
       - Make sure that HTML::Selector::XPath 0.06 or higher is installed
