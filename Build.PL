@@ -16,7 +16,7 @@ Module::Build->new(
         'perl'          => 5.006002,
     },
     recommends => {
-        'Test::Pod'           => '1.20',
+        'Test::Pod'           => '1.41',
         'Test::Pod::Coverage' => '1.06',
         'HTML::Selector::XPath' => '0.06',
     },

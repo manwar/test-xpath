@@ -1,6 +1,8 @@
 Revision history for Perl extension Test::XPath.
 
 0.16
+      - Bumped Test::Pod requirement up to 1.41 to support L<text|scheme:...>
+        directives. Thanks to Fitz Elliott for the report.
 
 0.15  2011-07-17T02:40:11
       - Require XML::LibXML 1.70, as that seems to be the first version to
