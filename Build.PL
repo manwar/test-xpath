@@ -24,7 +24,7 @@ Module::Build->new(
         resources => {
             homepage   => 'http://search.cpan.org/dist/Test-XPath/',
             bugtracker => 'http://github.com/theory/test-xpath/issues/',
-            repository => 'http://github.com/theory/test-xpath/tree/',
+            repository => 'http://github.com/theory/test-xpath',
         }
     },
 )->create_build_script;
