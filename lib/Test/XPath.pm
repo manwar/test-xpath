@@ -307,6 +307,11 @@ Select all "p" nodes that have any attribute.
 
 Select a count of all "p" nodes in the document.
 
+=item C<contains(//title, "Welcome")>
+
+Select true if the title node contains the string "Welcome", and false if it
+does not.
+
 =back
 
 There are a bunch of core functions in XPath. In addition to the (C<last()>
