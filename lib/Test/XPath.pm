@@ -630,16 +630,18 @@ C<no_xpath()> test functions.
 =head1 Support
 
 This module is stored in an open L<GitHub
-repository|http://github.com/theory/test-xpath/tree/>. Feel free to fork and
+repository|http://github.com/manwar/test-xpath/tree/>. Feel free to fork and
 contribute!
 
 Please file bug reports via L<GitHub
-Issues|http://github.com/theory/test-xpath/issues/> or by sending mail to
+Issues|http://github.com/manwar/test-xpath/issues/> or by sending mail to
 L<bug-Test-XPath@rt.cpan.org|mailto:bug-Test-XPath@rt.cpan.org>.
 
 =head1 Author
 
 David E. Wheeler <david@kineticode.com>
+
+Currently maintained by Mohammad S Anwar <mohammad.anwar@yahoo.com>
 
 =head1 Copyright and License
 
