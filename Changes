@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::XPath.
 
+0.18  2018-05-28T13:15:00
+      - Fixed broken SEE ALSO link. (MANWAR)
+
 0.17  2018-05-27T04:00:03
       - Updated repository details. (MANWAR)
       - Updated link to issues. (MANWAR)

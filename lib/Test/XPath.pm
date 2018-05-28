@@ -5,7 +5,7 @@ use 5.6.2;
 use XML::LibXML '1.69';
 use Test::Builder;
 
-our $VERSION = '0.17';
+our $VERSION = '0.18';
 
 sub new {
     my ($class, %p) = @_;
@@ -609,7 +609,7 @@ L<XML Path Language (XPath) Version 1.0 W3C Recommendation|http://www.w3.org/TR/
 
 =item *
 
-L<W3Schools XPath Tutorial|http://www.w3schools.com/Xpath/default.asp>.
+L<W3Schools XPath Tutorial|https://www.w3schools.com/xml/xpath_intro.asp>.
 
 =item *
 
