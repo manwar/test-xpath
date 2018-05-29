@@ -1,9 +1,7 @@
 /_build
 /blib
 /Test-XPath-*
-/MANIFEST
 /MANIFEST.bak
 /*META.*
 /Build
-/Makefile*
 /pm_to_blib

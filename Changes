@@ -1,5 +1,9 @@
 Revision history for Perl extension Test::XPath.
 
+0.19  2018-05-29T01:40:00
+      - Added Makefile.PL script. (MANWAR)
+      - Added MANIFEST file. (MANWAR)
+
 0.18  2018-05-28T13:15:00
       - Fixed broken SEE ALSO link. (MANWAR)
 
